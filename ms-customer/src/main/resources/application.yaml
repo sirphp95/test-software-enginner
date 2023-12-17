@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: MS-CUSTOMER
+  data:
+    mongodb:
+      user: ${MONGODB_USER}
+      password: ${MONGODB_PASS
+      database: desafio_engenharia
+      host: ${MONGODB_HOST}
+server:
+  port: 8080
+grpc:
+  server:
+    port: 4004
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled=: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
