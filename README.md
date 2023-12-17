@@ -74,33 +74,38 @@ Existem no total 4 dominios (cliente, pedido, pagamento e produto) e para cada d
 cluster do Amazon DocumentDB
 
 Segue abaixo o diagrama de arquitetura implantada no Cluster Kubernetes:
+![Architecture](https://github.com/sirphp95/test-software-enginner/assets/70244618/e403aea5-9861-4fe1-b338-718b2f1ac1a9)
 
-![Architecture](ms-backend-for-fronted/src/main/resources/diagrams/architecture.png)
 
 ### Modelagem de dados
  
  * Domínio Cliente
 
-![Customer](ms-customer/src/main/resources/docs/datamodeling/customer-model.drawio.png)
+
+![Customer](https://github.com/sirphp95/test-software-enginner/assets/70244618/3f4e22da-c3d3-4eaa-a6be-564fd6dc4ca6)
+
 
  * Domínio Pedido
 
-![Order](ms-order/src/main/resources/docs/datamodeling/order-model.drawio.png)
+![Order](https://github.com/sirphp95/test-software-enginner/assets/70244618/07e3f588-17e4-4f49-89a9-1a085ac4349e)
 
  * Domínio Pagamento
 
-![Payment](ms-payment/src/main/resources/documentation/datamodeling/payment-model.drawio.png)
+![payment](https://github.com/sirphp95/test-software-enginner/assets/70244618/560b6f49-0555-4401-b62d-39147f134393)
+
 
 * Domínio Produto
 
-![Product](ms-product/src/main/resources/documentation/datamodeling/product-model.drawio.png)
+![Product](https://github.com/sirphp95/test-software-enginner/assets/70244618/0d1905dc-9f7c-49c1-9a72-7f0e2409c24a)
+
 
 
 ### Casos de uso 
 
  * Desenho técnico
 
-![Use-case](ms-backend-for-fronted/src/main/resources/diagrams/use-case.png)
+![use-case](https://github.com/sirphp95/test-software-enginner/assets/70244618/1f0d238c-ef0d-4471-9c62-6958ca1c31ea)
+
 
 
  * Evidências de teste
@@ -111,41 +116,57 @@ Com um usuário e 2 produtos previamente cadastrados nos controllers Customer e 
 criar um novo pedido, nele são inseridos os IDs do cliente e IDs dos produtos, em caso de compra de mais de uma unidade 
 do mesmo item, o ID deve ser inserido N vezes.
 
-![CreateOrder1Request](evidencias/Request CreateOrder.png)
+![Request CreateOrder](https://github.com/sirphp95/test-software-enginner/assets/70244618/61f72efd-3c80-4e9e-b806-0e89c0a6737e)
+
 
 Após a criação do pedido, é retornado no corpo da resposta o objeto resultante e persistido na base de dados, note que jã
 são inseridos as informações que provêm dos IDs inseridos e como quantidade de itens, somatório total do pedido(Domínio produto)
 e endereço de entrega (Domínio Cliente).
 
-![CreateOrder1Response](evidencias/Result CreateOrder.png)
+![Result CreateOrder](https://github.com/sirphp95/test-software-enginner/assets/70244618/96c93bf9-704a-4dba-8e7d-941431c5d903)
+
 
 Também é gerado um registro na base do domínio de Pagamentos com o ID do pedido (orderId), que foi estimulado por recebimento de uma fila no RabbitMQ.
 
-![ResultFindAllPayment](evidencias/Request CreateOrder.png)
+
+![Request CreateOrder](https://github.com/sirphp95/test-software-enginner/assets/70244618/8f7fe1c6-83ac-4cb9-8f36-2e6041d9ac53)
+
 
 Já no domínio de produto, a quantidade dos produtos solicitados continua inalteradas até a postagem do pagamento.
 
-![ResultFindAllProducts](evidencias/Result FindAllProducts.png)
+
+![Result FindAllProducts](https://github.com/sirphp95/test-software-enginner/assets/70244618/e6dea4d8-1723-4869-88e0-03566a855f2a)
+
 
 
 Para postar um pagamento, é necessário informar o ID do pagamento, o método (PIX / CREDIT_CARD / BANKSLIP) e o Status que será
 trasacionado (PENDING / REFUSED / CONFIRMED / CANCELLED)
 
-![RequestPostPayment](evidencias/Request PostPayment.png)
+
+![Request PostPayment2](https://github.com/sirphp95/test-software-enginner/assets/70244618/f049ae0e-3e55-49cc-93d0-f8e13b0246f4)
+
 
 E em seguida é retornado o pagamento com status realizado
 
-![ResponsePostPayment](evidencias/Result PostPayment.png)
+
+![Result PostPayment](https://github.com/sirphp95/test-software-enginner/assets/70244618/1f2120b4-c1de-49db-89d9-7b817316e206)
+
 
 Também são alterados as quantidades disponíveis em estoque dos produtos comprados de acordo com a quantidade do pedido
 
-![ResultFindAllProductsPostPayment](evidencias/Result FindAllProducts post Payment.png)
+
+![Result FindAllProducts post Payment](https://github.com/sirphp95/test-software-enginner/assets/70244618/9947ea8e-bba6-472d-9960-fe4e1e340625)
+
 
 Além de atualizar o registro do pedido, que foi estimulado por outra mensagem no RabbitMQ para atualizá-lo do status de pagamento.
 
-![ResultOrderPostPayment](evidencias/Result findAllOrder post Payment Confirmed.png)
+
+![Result findAllOrder post Payment Confirmed](https://github.com/sirphp95/test-software-enginner/assets/70244618/d8799a9c-2665-4659-8620-4c2d37ae788b)
+
 
 E por fim, é gerado um cache para consultar os produtos mais vendidos por ordem de maior quantidade vendida.
 
-![Top5Cache](evidencias/Result FindTopSoldProducts post payment.png)
+
+![Result FindTopSoldProducts post payment](https://github.com/sirphp95/test-software-enginner/assets/70244618/2414386c-c8a3-4f44-9b59-b790083608e3)
+
 
